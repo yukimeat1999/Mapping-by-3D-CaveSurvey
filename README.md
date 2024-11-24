@@ -1,7 +1,4 @@
 # Mapping-by-3D-CaveSurvey
-Development of RT component for drawing system using 3D point clouds of caves.
-<br>
-# Mapping-by-3D-CaveSurvey
 Development of RT component for drawing system using 3D point clouds of caves.<br>
 Please check [this page](https://openrtm.org/openrtm/ja/project/contest2024-si2024-0109).<br>
 <br>
