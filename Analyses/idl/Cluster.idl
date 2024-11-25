@@ -1,0 +1,37 @@
+#ifndef CCLUSTER_IDL__
+#define CCLUSTER_IDL__
+
+module ClusterTypes
+{
+    // Time stamp
+    struct Time
+    {
+        unsigned long sec;
+        unsigned long nsec;
+    };
+
+    // ノード情報を格納する配列
+    typedef sequence<double> NodeData;
+    typedef sequence<NodeData> NodeArray;
+
+    // エッジ情報を格納する配列
+    typedef sequence<long> EdgeData;
+    typedef sequence<EdgeData> EdgeArray;
+    
+    struct ClusterData
+    {
+        // Time stamp
+        Time tm;
+
+        // ノード配列
+        NodeArray node;
+        
+        // エッジ配列
+        EdgeArray edge;
+        
+        // 現在のノード数
+        long node_n;
+    };
+};
+
+#endif // CCLUSTER_IDL__
