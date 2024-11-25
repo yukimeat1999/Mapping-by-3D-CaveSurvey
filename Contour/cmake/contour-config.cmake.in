@@ -1,0 +1,54 @@
+# Contour CMake config file
+#
+# This file sets the following variables:
+# Contour_FOUND - Always TRUE.
+# Contour_INCLUDE_DIRS - Directories containing the Contour include files.
+# Contour_IDL_DIRS - Directories containing the Contour IDL files.
+# Contour_LIBRARIES - Libraries needed to use Contour.
+# Contour_DEFINITIONS - Compiler flags for Contour.
+# Contour_VERSION - The version of Contour found.
+# Contour_VERSION_MAJOR - The major version of Contour found.
+# Contour_VERSION_MINOR - The minor version of Contour found.
+# Contour_VERSION_REVISION - The revision version of Contour found.
+# Contour_VERSION_CANDIDATE - The candidate version of Contour found.
+
+message(STATUS "Found Contour-@PROJECT_VERSION@")
+set(Contour_FOUND TRUE)
+
+find_package(<dependency> REQUIRED)
+
+#set(Contour_INCLUDE_DIRS
+#    "@CMAKE_INSTALL_PREFIX@/include/@PROJECT_NAME_LOWER@-@PROJECT_VERSION_MAJOR@"
+#    ${<dependency>_INCLUDE_DIRS}
+#    )
+#
+#set(Contour_IDL_DIRS
+#    "@CMAKE_INSTALL_PREFIX@/include/@PROJECT_NAME_LOWER@-@PROJECT_VERSION_MAJOR@/idl")
+set(Contour_INCLUDE_DIRS
+    "@CMAKE_INSTALL_PREFIX@/include/@CPACK_PACKAGE_FILE_NAME@"
+    ${<dependency>_INCLUDE_DIRS}
+    )
+set(Contour_IDL_DIRS
+    "@CMAKE_INSTALL_PREFIX@/include/@CPACK_PACKAGE_FILE_NAME@/idl")
+
+
+if(WIN32)
+    set(Contour_LIBRARIES
+        "@CMAKE_INSTALL_PREFIX@/@LIB_INSTALL_DIR@/@CMAKE_SHARED_LIBRARY_PREFIX@@PROJECT_NAME_LOWER@@CMAKE_STATIC_LIBRARY_SUFFIX@"
+        ${<dependency>_LIBRARIES}
+        )
+else(WIN32)
+    set(Contour_LIBRARIES
+        "@CMAKE_INSTALL_PREFIX@/@LIB_INSTALL_DIR@/@CMAKE_SHARED_LIBRARY_PREFIX@@PROJECT_NAME_LOWER@@CMAKE_SHARED_LIBRARY_SUFFIX@"
+        ${<dependency>_LIBRARIES}
+        )
+endif(WIN32)
+
+set(Contour_DEFINITIONS ${<dependency>_DEFINITIONS})
+
+set(Contour_VERSION @PROJECT_VERSION@)
+set(Contour_VERSION_MAJOR @PROJECT_VERSION_MAJOR@)
+set(Contour_VERSION_MINOR @PROJECT_VERSION_MINOR@)
+set(Contour_VERSION_REVISION @PROJECT_VERSION_REVISION@)
+set(Contour_VERSION_CANDIDATE @PROJECT_VERSION_CANDIDATE@)
+
