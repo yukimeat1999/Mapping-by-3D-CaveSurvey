@@ -1,0 +1,54 @@
+# WallDTC CMake config file
+#
+# This file sets the following variables:
+# WallDTC_FOUND - Always TRUE.
+# WallDTC_INCLUDE_DIRS - Directories containing the WallDTC include files.
+# WallDTC_IDL_DIRS - Directories containing the WallDTC IDL files.
+# WallDTC_LIBRARIES - Libraries needed to use WallDTC.
+# WallDTC_DEFINITIONS - Compiler flags for WallDTC.
+# WallDTC_VERSION - The version of WallDTC found.
+# WallDTC_VERSION_MAJOR - The major version of WallDTC found.
+# WallDTC_VERSION_MINOR - The minor version of WallDTC found.
+# WallDTC_VERSION_REVISION - The revision version of WallDTC found.
+# WallDTC_VERSION_CANDIDATE - The candidate version of WallDTC found.
+
+message(STATUS "Found WallDTC-@PROJECT_VERSION@")
+set(WallDTC_FOUND TRUE)
+
+find_package(<dependency> REQUIRED)
+
+#set(WallDTC_INCLUDE_DIRS
+#    "@CMAKE_INSTALL_PREFIX@/include/@PROJECT_NAME_LOWER@-@PROJECT_VERSION_MAJOR@"
+#    ${<dependency>_INCLUDE_DIRS}
+#    )
+#
+#set(WallDTC_IDL_DIRS
+#    "@CMAKE_INSTALL_PREFIX@/include/@PROJECT_NAME_LOWER@-@PROJECT_VERSION_MAJOR@/idl")
+set(WallDTC_INCLUDE_DIRS
+    "@CMAKE_INSTALL_PREFIX@/include/@CPACK_PACKAGE_FILE_NAME@"
+    ${<dependency>_INCLUDE_DIRS}
+    )
+set(WallDTC_IDL_DIRS
+    "@CMAKE_INSTALL_PREFIX@/include/@CPACK_PACKAGE_FILE_NAME@/idl")
+
+
+if(WIN32)
+    set(WallDTC_LIBRARIES
+        "@CMAKE_INSTALL_PREFIX@/@LIB_INSTALL_DIR@/@CMAKE_SHARED_LIBRARY_PREFIX@@PROJECT_NAME_LOWER@@CMAKE_STATIC_LIBRARY_SUFFIX@"
+        ${<dependency>_LIBRARIES}
+        )
+else(WIN32)
+    set(WallDTC_LIBRARIES
+        "@CMAKE_INSTALL_PREFIX@/@LIB_INSTALL_DIR@/@CMAKE_SHARED_LIBRARY_PREFIX@@PROJECT_NAME_LOWER@@CMAKE_SHARED_LIBRARY_SUFFIX@"
+        ${<dependency>_LIBRARIES}
+        )
+endif(WIN32)
+
+set(WallDTC_DEFINITIONS ${<dependency>_DEFINITIONS})
+
+set(WallDTC_VERSION @PROJECT_VERSION@)
+set(WallDTC_VERSION_MAJOR @PROJECT_VERSION_MAJOR@)
+set(WallDTC_VERSION_MINOR @PROJECT_VERSION_MINOR@)
+set(WallDTC_VERSION_REVISION @PROJECT_VERSION_REVISION@)
+set(WallDTC_VERSION_CANDIDATE @PROJECT_VERSION_CANDIDATE@)
+
