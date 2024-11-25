@@ -1,0 +1,54 @@
+# MapViewer CMake config file
+#
+# This file sets the following variables:
+# MapViewer_FOUND - Always TRUE.
+# MapViewer_INCLUDE_DIRS - Directories containing the MapViewer include files.
+# MapViewer_IDL_DIRS - Directories containing the MapViewer IDL files.
+# MapViewer_LIBRARIES - Libraries needed to use MapViewer.
+# MapViewer_DEFINITIONS - Compiler flags for MapViewer.
+# MapViewer_VERSION - The version of MapViewer found.
+# MapViewer_VERSION_MAJOR - The major version of MapViewer found.
+# MapViewer_VERSION_MINOR - The minor version of MapViewer found.
+# MapViewer_VERSION_REVISION - The revision version of MapViewer found.
+# MapViewer_VERSION_CANDIDATE - The candidate version of MapViewer found.
+
+message(STATUS "Found MapViewer-@PROJECT_VERSION@")
+set(MapViewer_FOUND TRUE)
+
+find_package(<dependency> REQUIRED)
+
+#set(MapViewer_INCLUDE_DIRS
+#    "@CMAKE_INSTALL_PREFIX@/include/@PROJECT_NAME_LOWER@-@PROJECT_VERSION_MAJOR@"
+#    ${<dependency>_INCLUDE_DIRS}
+#    )
+#
+#set(MapViewer_IDL_DIRS
+#    "@CMAKE_INSTALL_PREFIX@/include/@PROJECT_NAME_LOWER@-@PROJECT_VERSION_MAJOR@/idl")
+set(MapViewer_INCLUDE_DIRS
+    "@CMAKE_INSTALL_PREFIX@/include/@CPACK_PACKAGE_FILE_NAME@"
+    ${<dependency>_INCLUDE_DIRS}
+    )
+set(MapViewer_IDL_DIRS
+    "@CMAKE_INSTALL_PREFIX@/include/@CPACK_PACKAGE_FILE_NAME@/idl")
+
+
+if(WIN32)
+    set(MapViewer_LIBRARIES
+        "@CMAKE_INSTALL_PREFIX@/@LIB_INSTALL_DIR@/@CMAKE_SHARED_LIBRARY_PREFIX@@PROJECT_NAME_LOWER@@CMAKE_STATIC_LIBRARY_SUFFIX@"
+        ${<dependency>_LIBRARIES}
+        )
+else(WIN32)
+    set(MapViewer_LIBRARIES
+        "@CMAKE_INSTALL_PREFIX@/@LIB_INSTALL_DIR@/@CMAKE_SHARED_LIBRARY_PREFIX@@PROJECT_NAME_LOWER@@CMAKE_SHARED_LIBRARY_SUFFIX@"
+        ${<dependency>_LIBRARIES}
+        )
+endif(WIN32)
+
+set(MapViewer_DEFINITIONS ${<dependency>_DEFINITIONS})
+
+set(MapViewer_VERSION @PROJECT_VERSION@)
+set(MapViewer_VERSION_MAJOR @PROJECT_VERSION_MAJOR@)
+set(MapViewer_VERSION_MINOR @PROJECT_VERSION_MINOR@)
+set(MapViewer_VERSION_REVISION @PROJECT_VERSION_REVISION@)
+set(MapViewer_VERSION_CANDIDATE @PROJECT_VERSION_CANDIDATE@)
+
