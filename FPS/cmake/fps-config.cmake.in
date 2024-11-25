@@ -1,0 +1,54 @@
+# FPS CMake config file
+#
+# This file sets the following variables:
+# FPS_FOUND - Always TRUE.
+# FPS_INCLUDE_DIRS - Directories containing the FPS include files.
+# FPS_IDL_DIRS - Directories containing the FPS IDL files.
+# FPS_LIBRARIES - Libraries needed to use FPS.
+# FPS_DEFINITIONS - Compiler flags for FPS.
+# FPS_VERSION - The version of FPS found.
+# FPS_VERSION_MAJOR - The major version of FPS found.
+# FPS_VERSION_MINOR - The minor version of FPS found.
+# FPS_VERSION_REVISION - The revision version of FPS found.
+# FPS_VERSION_CANDIDATE - The candidate version of FPS found.
+
+message(STATUS "Found FPS-@PROJECT_VERSION@")
+set(FPS_FOUND TRUE)
+
+find_package(<dependency> REQUIRED)
+
+#set(FPS_INCLUDE_DIRS
+#    "@CMAKE_INSTALL_PREFIX@/include/@PROJECT_NAME_LOWER@-@PROJECT_VERSION_MAJOR@"
+#    ${<dependency>_INCLUDE_DIRS}
+#    )
+#
+#set(FPS_IDL_DIRS
+#    "@CMAKE_INSTALL_PREFIX@/include/@PROJECT_NAME_LOWER@-@PROJECT_VERSION_MAJOR@/idl")
+set(FPS_INCLUDE_DIRS
+    "@CMAKE_INSTALL_PREFIX@/include/@CPACK_PACKAGE_FILE_NAME@"
+    ${<dependency>_INCLUDE_DIRS}
+    )
+set(FPS_IDL_DIRS
+    "@CMAKE_INSTALL_PREFIX@/include/@CPACK_PACKAGE_FILE_NAME@/idl")
+
+
+if(WIN32)
+    set(FPS_LIBRARIES
+        "@CMAKE_INSTALL_PREFIX@/@LIB_INSTALL_DIR@/@CMAKE_SHARED_LIBRARY_PREFIX@@PROJECT_NAME_LOWER@@CMAKE_STATIC_LIBRARY_SUFFIX@"
+        ${<dependency>_LIBRARIES}
+        )
+else(WIN32)
+    set(FPS_LIBRARIES
+        "@CMAKE_INSTALL_PREFIX@/@LIB_INSTALL_DIR@/@CMAKE_SHARED_LIBRARY_PREFIX@@PROJECT_NAME_LOWER@@CMAKE_SHARED_LIBRARY_SUFFIX@"
+        ${<dependency>_LIBRARIES}
+        )
+endif(WIN32)
+
+set(FPS_DEFINITIONS ${<dependency>_DEFINITIONS})
+
+set(FPS_VERSION @PROJECT_VERSION@)
+set(FPS_VERSION_MAJOR @PROJECT_VERSION_MAJOR@)
+set(FPS_VERSION_MINOR @PROJECT_VERSION_MINOR@)
+set(FPS_VERSION_REVISION @PROJECT_VERSION_REVISION@)
+set(FPS_VERSION_CANDIDATE @PROJECT_VERSION_CANDIDATE@)
+
