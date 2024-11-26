@@ -14,7 +14,7 @@ Please check [this page](https://openrtm.org/openrtm/ja/project/contest2024-si20
 
 ## 概要
 ・ LiDAR センサーからのデータを出力<br>
-・ 3次計測を行い点群データを生成<br>
+・ 3 次計測を行い点群データを生成<br>
 ・ 複数の点群データを統合<br>
 ・ 統合された点群データで Growing Neural Gas (GNG) を用いた解析<br>
 ・ 各種点群データの表示<br>
@@ -49,7 +49,7 @@ Please check [this page](https://openrtm.org/openrtm/ja/project/contest2024-si20
 <br>
 ### 新規作成
 ・ FPS RTC：FPS を行うことで点群の粗密に関係なく均等にダウンサンプリング<br>
-・ WallDTC RTC：鉛直 (z軸) 方向上から見た洞壁をクラスタとして生成・出力する<br>
+・ WallDTC RTC：鉛直 (z 軸) 方向上から見た洞壁をクラスタとして生成・出力する<br>
 ・ Contour RTC：洞床の高低差を疑似カラーを用いたエレベーションマップで表現<br>
 ・ MapViewer RTC：洞壁のクラスタとエレベーションマップを統合して可視化する<br>
 <br>
