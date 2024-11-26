@@ -3,9 +3,9 @@ Development of RT component for drawing system using 3D point clouds of caves.<b
 Please check [this page](https://openrtm.org/openrtm/ja/project/contest2024-si2024-0109).<br>
 <br>
 <p style="text-align: center;">
-  <img src="https://openrtm.org/openrtm/sites/default/files/PointCloud_Viewer3.jpg" alt="PointCloud Viewer" width="400">
+  <img src="https://openrtm.org/openrtm/sites/default/files/PointCloud_Viewer3.jpg" alt="PointCloud Viewer" width="600">
   <img src="https://openrtm.org/openrtm/sites/default/files/FPS.jpg" alt="FPS" width="300"><br>
-  <img src="https://openrtm.org/openrtm/sites/default/files/EMap_PlanWall_0.jpg" alt="EMap_PlanWall" width="400">
+  <img src="https://openrtm.org/openrtm/sites/default/files/EMap_PlanWall_0.jpg" alt="EMap_PlanWall" width="600">
 </p>
 <br>
 ## 目的
