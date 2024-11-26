@@ -198,7 +198,7 @@ RTC::ReturnCode_t Analyses::onActivated(RTC::UniqueId /*ec_id*/)
     }
 
     if(pointcloud_data == NULL){
-        pointcloud_data = malloc2d_double(1000000, LDIM);
+        pointcloud_data = malloc2d_double(3000000, LDIM);
     }
 
     std::cerr << "[INFO] Activated Analyses OK!" << std::endl;
