@@ -2,6 +2,11 @@
 Development of RT component for drawing system using 3D point clouds of caves.<br>
 Please check [this page](https://openrtm.org/openrtm/ja/project/contest2024-si2024-0109).<br>
 <br>
+![Test Image 8](https://openrtm.org/openrtm/sites/default/files/PointCloud_Viewer3.jpg?raw=true)
+![Test Image 8](https://openrtm.org/openrtm/sites/default/files/FPS.jpg?raw=true)
+![Test Image 8](https://openrtm.org/openrtm/sites/default/files/EMap_PlanWall_0.jpg?raw=true)
+
+
 ## 目的
 　洞窟での測量は，地理学や地質学的な観点から重要なタスクの一つであり，センサ技術を利用したデジタル化が望まれている一分野である．特に，3 次元距離計測は洞窟内の地図構築や洞窟の形状把握が可能となるため，小型化された計測システムと解析技術の発展が望まれている．そこで本研究では，昨年作成した測量システムを拡張し，洞窟で計測された3次元点群データをもとに図面化するシステムをRTコンポーネント（RTC）により開発することで，容易に洞窟の図面化が可能となるシステムの有効性を示すコンポーネント群である．<br>
 <br>
