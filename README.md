@@ -39,21 +39,25 @@ Please check [this page](https://openrtm.org/openrtm/ja/project/contest2024-si20
 <br>
 ## コンポーネント群
 ### 再利用
+　以下のRTCは前年度作成したものを再利用したものである．<br>
 ・ EtheURG RTC：2DLiDAR センサーを読取り出力（北陽電機 URGセンサ　UTM-30LX-EW）<br>
 ・ MeasurementSystem RTC：Dynamixel を用いて LiDAR を回転させ，3D 点群を生成し保存・出力を行う<br>
 ・ Registration RTC：複数の場所で計測された点群データを一つの点群データとして統合する<br>
 <br>
 ### 修正
+　以下のRTCは前年度作成したものを修正したものである．<br>
 ・ Analyses RTC：統合された点群データで GNG を用いた解析が行われ，その解析結果を出力する<br>
 ・ PointCloud_Viewer RTC：MeasurementSystem RTC，Registration RTC，Analyses RTCから受け取った点群データを表示する<br>
 <br>
 ### 新規作成
+　以下のRTCは新規に作成したものである．<br>
 ・ FPS RTC：FPS を行うことで点群の粗密に関係なく均等にダウンサンプリング<br>
 ・ WallDTC RTC：鉛直 (z 軸) 方向上から見た洞壁をクラスタとして生成・出力する<br>
 ・ Contour RTC：洞床の高低差を疑似カラーを用いたエレベーションマップで表現<br>
 ・ MapViewer RTC：洞壁のクラスタとエレベーションマップを統合して可視化する<br>
 <br>
 ### オプションRTC
+　以下のRTCはシステムの途中から開始できるように用意したオプションである．<br>
 ・ PointCloud_Reader RTC：.ply 形式の点群データを読み込み，File_PointCloud ポートから出力する<br>
 <br>
 ## ドキュメント
