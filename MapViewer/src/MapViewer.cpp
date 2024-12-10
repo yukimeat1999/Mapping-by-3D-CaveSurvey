@@ -132,47 +132,9 @@ void RedirectVTKOutputWindow() {
     vtkObject::GlobalWarningDisplayOff();
 }
 
-// 色付きの点群の可視化
-void visualizeCloud(ColorCloudT::Ptr cloud, const std::string& PointName) {
-    RedirectVTKOutputWindow();
-    std::string ViewerName = PointName + " Viewer";
-    pcl::visualization::PCLVisualizer viewer(ViewerName);
-    std::cerr << "[INFO] Colored " << ViewerName << " is opened." << std::endl;
-    int c0 = 0;
-    viewer.removeAllShapes(c0);
-    viewer.removeAllPointClouds(c0);
-    viewer.createViewPort(0.0, 0.0, 1.0, 1.0, c0);
-    viewer.setBackgroundColor(1.0, 1.0, 1.0, c0);
-    viewer.addCoordinateSystem(1.0, "coordinate system", c0);
-    viewer.initCameraParameters();
-    viewer.setCameraPosition(0.0, 0.0, 100.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
-
-    // 点ごとにキューブを描画
-    int cubeId = 0; // キューブのID
-    for (const auto& point : *cloud) {
-        // キューブの範囲を計算 (中心を点の座標に設定)
-        float x_min = point.x - voxelSize / 2.0f;
-        float x_max = point.x + voxelSize / 2.0f;
-        float y_min = point.y - voxelSize / 2.0f;
-        float y_max = point.y + voxelSize / 2.0f;
-        float z_min = point.z - voxelSize / 2.0f;
-        float z_max = 0.0 - 0.1; // point.z + voxelSize / 2.0f;
-
-        // RGB情報を取得
-        float r = point.r / 255.0f; // 0.0～1.0の範囲に正規化
-        float g = point.g / 255.0f;
-        float b = point.b / 255.0f;
-
-        // キューブを追加
-        std::string cubeName = "cube_" + std::to_string(cubeId++);
-        viewer.addCube(x_min, x_max, y_min, y_max, z_min, z_max, r, g, b, cubeName);
-    }
-    std::cerr << "[INFO] Please window closed..." << std::endl;
-    viewer.spin();
-}
-
-void GNGView(const pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud1,
+void ClusterView(const pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud,
     struct gng* net,
+	float voxelSize,
     const std::string& PointName) {
     RedirectVTKOutputWindow();
     std::string ViewerName = PointName + " Viewer";
@@ -188,23 +150,22 @@ void GNGView(const pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud1,
     viewer->setCameraPosition(0.0, 0.0, 100.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
 
     // 点ごとにキューブを描画
-    int cubeId = 0; // キューブのID
-    for (const auto& point : *cloud1) {
+    for (size_t i = 0; i < cloud->points.size(); ++i) {
         // キューブの範囲を計算 (中心を点の座標に設定)
-        float x_min = point.x - voxelSize / 2.0f;
-        float x_max = point.x + voxelSize / 2.0f;
-        float y_min = point.y - voxelSize / 2.0f;
-        float y_max = point.y + voxelSize / 2.0f;
-        float z_min = point.z - voxelSize / 2.0f;
-        float z_max = 0.0 - 0.1; // point.z + voxelSize / 2.0f;
+        float x_min = cloud->points[i].x - voxelSize / 2.0f;
+        float x_max = cloud->points[i].x + voxelSize / 2.0f;
+        float y_min = cloud->points[i].y - voxelSize / 2.0f;
+        float y_max = cloud->points[i].y + voxelSize / 2.0f;
+        float z_min = 0.0 - 0.05 - voxelSize;
+        float z_max = 0.0 - 0.05;
         
         // RGB情報を取得
-        float r = point.r / 255.0f; // 0.0～1.0の範囲に正規化
-        float g = point.g / 255.0f;
-        float b = point.b / 255.0f;
+        float r = cloud->points[i].r / 255.0f; // 0.0～1.0の範囲に正規化
+        float g = cloud->points[i].g / 255.0f;
+        float b = cloud->points[i].b / 255.0f;
 
         // キューブを追加
-        std::string cubeName = "cube_" + std::to_string(cubeId++);
+        std::string cubeName = "cube_" + std::to_string(i);
         viewer->addCube(x_min, x_max, y_min, y_max, z_min, z_max, r, g, b, cubeName);
     }
 
@@ -263,6 +224,60 @@ void GNGView(const pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud1,
     std::cerr << "[INFO] Please window closed..." << std::endl;
     viewer->spin();
     // Update viewer_closed to true when the window is closed
+    viewer_closed = true;
+}
+
+// 床の可視化
+void visualizeFloor(const ColorCloudT::Ptr& floor_cloud,
+    float voxelSize,
+    const std::string& PointName) {
+    RedirectVTKOutputWindow();
+    std::string ViewerName = PointName + " Viewer";
+    pcl::visualization::PCLVisualizer::Ptr viewer(new pcl::visualization::PCLVisualizer(ViewerName));
+    std::cerr << "[INFO] Colored " << ViewerName << " is opened." << std::endl;
+    int c0 = 0;
+    viewer->removeAllShapes(c0);
+    viewer->removeAllPointClouds(c0);
+    viewer->createViewPort(0.0, 0.0, 1.0, 1.0, c0);
+    viewer->setBackgroundColor(0.2, 0.2, 0.2, c0);
+    viewer->addCoordinateSystem(1.0, "coordinate system", c0);
+    viewer->initCameraParameters();
+    viewer->setCameraPosition(0.0, 0.0, 100.0, // カメラ位置 (x, y, z)
+        0.0, 0.0, 0.0,   // 注視点 (x, y, z)
+        0.0, 1.0, 0.0);  // カメラの上方向ベクトル (x, y, z)
+
+    // z軸の最小値と最大値を取得
+    float minZ = std::numeric_limits<float>::max();
+    float maxZ = std::numeric_limits<float>::lowest();
+    for (const auto& point : floor_cloud->points) {
+        if (point.z < minZ) minZ = point.z;
+        if (point.z > maxZ) maxZ = point.z;
+    }
+
+    for (size_t i = 0; i < floor_cloud->points.size(); ++i) {
+        // キューブの範囲を計算 (中心を点の座標に設定)
+        float x_min = floor_cloud->points[i].x - voxelSize / 2.0f;
+        float x_max = floor_cloud->points[i].x + voxelSize / 2.0f;
+        float y_min = floor_cloud->points[i].y - voxelSize / 2.0f;
+        float y_max = floor_cloud->points[i].y + voxelSize / 2.0f;
+        float z_max = floor_cloud->points[i].z + voxelSize / 2.0f;
+        float z_min = minZ - voxelSize / 2.0f;
+
+        // RGB情報を取得
+        float r = floor_cloud->points[i].r / 255.0f; // 0.0～1.0の範囲に正規化
+        float g = floor_cloud->points[i].g / 255.0f;
+        float b = floor_cloud->points[i].b / 255.0f;
+
+        // キューブを追加
+        std::string cubeName = "cube_" + std::to_string(i);
+        viewer->addCube(x_min, x_max, y_min, y_max, z_min, z_max, r, g, b, cubeName);
+        //viewer->setShapeRenderingProperties(pcl::visualization::PCL_VISUALIZER_OPACITY, 0.5, cubeName); // 半透明に設定
+    }
+
+    // Start the viewer
+    std::cerr << "[INFO] " << PointName << " is shown." << std::endl;
+    std::cerr << "[INFO] Please window closed..." << std::endl;
+    viewer->spin();
     viewer_closed = true;
 }
 
@@ -478,7 +493,7 @@ RTC::ReturnCode_t MapViewer::onExecute(RTC::UniqueId /*ec_id*/)
 
             if (View_flag1 && (!Contour_closed)) {
                 // Viewer show
-                visualizeCloud(Contour_cloud, "Elevation Map");
+                visualizeFloor(Contour_cloud, voxelSize, "Elevation Map");
                 Contour_flag = true;
                 Contour_1th_flag = true;
                 Contour_read_flag = false;
@@ -541,7 +556,7 @@ RTC::ReturnCode_t MapViewer::onExecute(RTC::UniqueId /*ec_id*/)
 
             if (View_flag2 && (!PlanWall_closed)) {
                 // Viewer show
-                GNGView(Empty_cloud, gng_net, "PlanWall");
+                ClusterView(Empty_cloud, gng_net, voxelSize, "PlanWall");
 
                 PlanWall_flag = true;
                 PlanWall_1th_flag = true;
@@ -666,13 +681,13 @@ RTC::ReturnCode_t MapViewer::onExecute(RTC::UniqueId /*ec_id*/)
             Switching = Switch(m_Switching);
             if (Switching == 0) {
                 // Elevation Map
-                visualizeCloud(Contour_cloud, "Elevation Map");
+                visualizeFloor(Contour_cloud, voxelSize, "Elevation Map");
             } else if (Switching == 1) {
                 // Elevation Map and Wall DTC
-                GNGView(Contour_cloud, gng_net, "Elevation Map and PlanWall");
+                ClusterView(Contour_cloud, gng_net, voxelSize, "Elevation Map and PlanWall");
             } else if (Switching == 2) {
                 // Wall DTC
-                GNGView(Empty_cloud, gng_net, "PlanWall");
+                ClusterView(Empty_cloud, gng_net, voxelSize, "PlanWall");
             }
         } else{
             Contour_flag = true;
