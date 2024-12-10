@@ -44,11 +44,13 @@ using ColorCloudT = pcl::PointCloud<ColorPointT>;
 
 // Function
 void RedirectVTKOutputWindow();
-void visualizeCloud(CloudT::Ptr cloud, const std::string& PointName);
-void visualizeCloud(ColorCloudT::Ptr cloud, const std::string& PointName);
-void GNGView(const pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud1,
+void ClusterView(const pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud,
 	struct gng* net,
-	const std::string& PointName);
+    float voxelSize,
+    const std::string& PointName);
+void visualizeFloor(const ColorCloudT::Ptr& floor_cloud,
+    float voxelSize,
+    const std::string& PointName);
 
 // <rtc-template block="component_description">
 /*!
