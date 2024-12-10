@@ -260,7 +260,6 @@ RTC::ReturnCode_t Contour::onExecute(RTC::UniqueId /*ec_id*/)
             std::cout << "[INFO] Voxelized point cloud has " << voxelCenters->size() << " points." << std::endl;
 
             // xy座標が同じ点の中でz値が最小のものだけを残す処理
-            CloudT::Ptr filteredCloud(new CloudT);
             std::map<std::pair<int, int>, PointT> minZMap;
 
             for (const auto& point : voxelCenters->points) {
@@ -277,43 +276,38 @@ RTC::ReturnCode_t Contour::onExecute(RTC::UniqueId /*ec_id*/)
 
             // 最小z値を持つ点を結果の点群に追加
             for (const auto& entry : minZMap) {
-                filteredCloud->points.push_back(entry.second);
+                pcl::PointXYZRGB point;
+                point.x = entry.second.x;
+                point.y = entry.second.y;
+                point.z = entry.second.z;
+                point.r = 0;
+                point.g = 0;
+                point.b = 0;
+                out_cloud->points.push_back(point);
             }
 
-            // filteredCloudのwidth, height, is_denseを設定
-            filteredCloud->width = filteredCloud->points.size();
-            filteredCloud->height = 1; // 1行にすべてのポイントを格納
-            filteredCloud->is_dense = true;
-            std::cout << "[INFO] Filtered point cloud has " << filteredCloud->size() << " points." << std::endl;
+            // out_cloudのwidth, height, is_denseを設定
+            out_cloud->width = out_cloud->points.size();
+            out_cloud->height = 1; // 1行にすべてのポイントを格納
+            out_cloud->is_dense = true;
 
-            // エレベーションマップ
             // z軸の最小値と最大値を取得
-            float min_z = std::numeric_limits<float>::max();
-            float max_z = std::numeric_limits<float>::lowest();
-            for (const auto& point : filteredCloud->points) {
-                if (point.z < min_z) min_z = point.z;
-                if (point.z > max_z) max_z = point.z;
+            float maxZ = std::numeric_limits<float>::lowest();
+            float minZ = std::numeric_limits<float>::max();
+            for (const auto& point : out_cloud->points) {
+                if (point.z < minZ) minZ = point.z;
+                if (point.z > maxZ) maxZ = point.z;
             }
 
             // カラー付き点群の作成
-            for (const auto& point : filteredCloud->points) {
-                ColorPointT point_rgb;
-                point_rgb.x = point.x;
-                point_rgb.y = point.y;
-                point_rgb.z = 0.0f;
-
+            for (size_t i = 0; i < out_cloud->points.size(); ++i) {
                 // z軸に基づく疑似カラーを計算
                 uint8_t r, g, b;
-                calculateColor(point.z, min_z, max_z, r, g, b);
-                point_rgb.r = r;
-                point_rgb.g = g;
-                point_rgb.b = b;
-
-                out_cloud->points.push_back(point_rgb);
+                calculateColor(out_cloud->points[i].z, minZ, maxZ, r, g, b);
+                out_cloud->points[i].r = r;
+                out_cloud->points[i].g = g;
+                out_cloud->points[i].b = b;
             }
-            out_cloud->width = filteredCloud->width;
-            out_cloud->height = filteredCloud->height;
-            out_cloud->is_dense = filteredCloud->is_dense;
 
             // バグ回避のため
             test(voxelizedCloud, Empty_cloud);
@@ -392,7 +386,6 @@ RTC::ReturnCode_t Contour::onExecute(RTC::UniqueId /*ec_id*/)
                     Sleep(0.5 * 1000);
                 }
                 new_cloud.reset();
-                filteredCloud.reset();
                 out_cloud.reset();
                 minZMap.clear();
                 new_cloud = CloudT::Ptr(new CloudT);
